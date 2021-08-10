@@ -1,0 +1,42 @@
+<template> 
+  <lightning-layout>
+    <lightning-layout-item padding="around-small" size="8">
+    <lightning-card title="Find an account">
+        <div class="input-wrapper">
+            <lightning-combobox
+            name="progress"
+            label="Select Type of Account"
+            value={value}
+            placeholder="All Types"
+            options={options}
+            onchange={handleChange}>
+            </lightning-combobox>  
+            <div class="slds-text-align_left">The amount of budgets of the selected account type: $ {accountBudget}</div>
+        </div>
+      <div class="slds-grid slds-grid_align-space slds-wrap">  
+        <template for:each={accData.data} for:item="account" for:index="index">  
+          <div class="slds-col--padded-around-medium" key={account.Id}>  
+            <lightning-card class="marked">
+                <div class="picture"></div>
+                <div class="slds-text-title_bold">{account.Name}</div>
+                <div class="slds-text-align_left">Owner: {account.OwnerId}</div>
+                <div class="slds-text-align_left">Budget: $ {account.Budget__c}</div>
+                <div class="slds-text-align_left">Empoyees: {account.NumberOfEmployees}</div>
+                <div class="slds-text-align_left">Type: {account.Type}</div>
+        
+                <p key={account.Id} slot="footer">
+                    <lightning-button variant="brand-outline" label="Show Details" title="Show account details" onclick={handleClick} data-accountid={account.Name} class="slds-m-left_x-small spacing-btn"></lightning-button>
+                </p>
+            </lightning-card>
+          </div>  
+        </template>
+      </div>
+    </lightning-card>  
+  </lightning-layout-item>
+  
+    <lightning-layout-item padding="around-small" size="4">
+      <c-account-description-component account-id={accountidFromParent}></c-account-description-component>
+    </lightning-layout-item>
+    
+  </lightning-layout> 
+  </template>

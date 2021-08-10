@@ -1,0 +1,13 @@
+<template>
+    <template for:each={contacts.data} for:item="account" for:index="index">  
+        <div class="slds-col--padded-around-medium" key={account.Id}>  
+            <lightning-card  variant="Narrow"  title={account.Name} icon-name="standard:account">
+                <lightning-button label="Full Details" title="Go to the Account Page" onclick={navigateToViewRecordPage}  class="slds-m-left_x-small" slot="actions"></lightning-button>
+                <p class="slds-p-horizontal_small">Account Type: {account.Type}</p>
+                <p class="slds-p-horizontal_small">Industry: {account.Industry}</p>
+                <p class="slds-p-horizontal_small">Budget: $ {account.Budget__c}</p>
+                <p class="slds-p-horizontal_small">Description: {account.Description}</p>
+            </lightning-card>
+        </div>  
+      </template>
+</template>

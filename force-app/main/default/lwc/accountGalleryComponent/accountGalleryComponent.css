@@ -1,0 +1,12 @@
+.picture{
+    width: 200px;
+    height: 200px;
+    background-color: blue;
+}
+.input-wrapper{
+    margin: 0 auto;
+    width: 40%;
+}
+.marked:hover{
+    --sds-c-card-shadow:0 2px 2px 0 rgb(190, 253, 255);
+}
