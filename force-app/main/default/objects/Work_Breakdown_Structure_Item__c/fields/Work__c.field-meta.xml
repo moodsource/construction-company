@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Work__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Work</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Product2__c.Type__c</field>
+            <operation>equals</operation>
+            <value>Work</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Product2__c</referenceTo>
+    <relationshipLabel>Work Breakdown Structure Items (Work)</relationshipLabel>
+    <relationshipName>Work_Breakdown_Structure_Items1</relationshipName>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
