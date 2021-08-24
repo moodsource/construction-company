@@ -3,8 +3,9 @@
     <fullName>Total_Quantity__c</fullName>
     <externalId>false</externalId>
     <label>Total Quantity</label>
+    <summarizedField>Work_Breakdown_Structure_Item__c.Quantity__c</summarizedField>
     <summaryForeignKey>Work_Breakdown_Structure_Item__c.Work_Breakdown_Structure__c</summaryForeignKey>
-    <summaryOperation>count</summaryOperation>
+    <summaryOperation>sum</summaryOperation>
     <trackTrending>false</trackTrending>
     <type>Summary</type>
 </CustomField>

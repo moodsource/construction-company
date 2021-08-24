@@ -7,7 +7,7 @@
     <lookupFilter>
         <active>true</active>
         <filterItems>
-            <field>Construction__c.RecordTypeId</field>
+            <field>$Source.RecordTypeId</field>
             <operation>equals</operation>
             <value>Project</value>
         </filterItems>

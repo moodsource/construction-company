@@ -12,32 +12,62 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Bricks, Wood, Concrete</fullName>
+                <fullName>Bricks</fullName>
                 <default>false</default>
-                <label>Bricks, Wood, Concrete</label>
+                <label>Bricks</label>
             </value>
             <value>
-                <fullName>Glass &amp; Metal, Bricks, Concrete</fullName>
+                <fullName>Wood</fullName>
                 <default>false</default>
-                <label>Glass &amp; Metal, Bricks, Concrete</label>
+                <label>Wood</label>
             </value>
             <value>
-                <fullName>Metal, Fast Construction</fullName>
+                <fullName>Concrete</fullName>
                 <default>false</default>
-                <label>Metal, Fast Construction</label>
+                <label>Concrete</label>
+            </value>
+            <value>
+                <fullName>Glass</fullName>
+                <default>false</default>
+                <label>Glass</label>
+            </value>
+            <value>
+                <fullName>Metal</fullName>
+                <default>false</default>
+                <label>Metal</label>
+            </value>
+            <value>
+                <fullName>Fast Construction</fullName>
+                <default>false</default>
+                <label>Fast Construction</label>
             </value>
         </valueSetDefinition>
         <valueSettings>
             <controllingFieldValue>Individual Building</controllingFieldValue>
-            <valueName>Bricks, Wood, Concrete</valueName>
+            <controllingFieldValue>Office</controllingFieldValue>
+            <valueName>Bricks</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Individual Building</controllingFieldValue>
+            <valueName>Wood</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Individual Building</controllingFieldValue>
+            <controllingFieldValue>Office</controllingFieldValue>
+            <valueName>Concrete</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Office</controllingFieldValue>
-            <valueName>Glass &amp; Metal, Bricks, Concrete</valueName>
+            <valueName>Glass</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Office</controllingFieldValue>
+            <controllingFieldValue>Warehouse</controllingFieldValue>
+            <valueName>Metal</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Warehouse</controllingFieldValue>
-            <valueName>Metal, Fast Construction</valueName>
+            <valueName>Fast Construction</valueName>
         </valueSettings>
     </valueSet>
 </CustomField>

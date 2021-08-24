@@ -6,15 +6,27 @@
     <picklistValues>
         <picklist>Materials__c</picklist>
         <values>
-            <fullName>Bricks%2C Wood%2C Concrete</fullName>
+            <fullName>Bricks</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Glass %26 Metal%2C Bricks%2C Concrete</fullName>
+            <fullName>Concrete</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Metal%2C Fast Construction</fullName>
+            <fullName>Fast Construction</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Glass</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Metal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wood</fullName>
             <default>false</default>
         </values>
     </picklistValues>
