@@ -10,7 +10,7 @@
             <operation>equals</operation>
             <valueField>$Source.Account__c</valueField>
         </filterItems>
-        <isOptional>true</isOptional>
+        <isOptional>false</isOptional>
     </lookupFilter>
     <referenceTo>Contact</referenceTo>
     <relationshipLabel>Work Breakdown Structure Items</relationshipLabel>
