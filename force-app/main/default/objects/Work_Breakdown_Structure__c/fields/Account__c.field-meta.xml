@@ -6,7 +6,6 @@
     <label>Account</label>
     <lookupFilter>
         <active>true</active>
-        <errorMessage>Record type is not Engineering Unit or Sub-Contractor</errorMessage>
         <filterItems>
             <field>Account.RecordTypeId</field>
             <operation>equals</operation>
