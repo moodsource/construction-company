@@ -4,7 +4,16 @@ trigger OpportunityTrigger on Opportunity(after update, before update) {
 		Map<Id, Opportunity> oldMap = Trigger.oldMap;
 		for (Opportunity oppNew : Trigger.New) {
 			Opportunity oppOld = oldMap.get(oppNew.Id);
-			if (oppOld.StageName == Constants.OPP_STAGE_QUOTE_SENT) {
+			if (oppNew.StageName == 'Shared' && oppNew.Partner__c != null) {
+				Partner__c par = [
+					SELECT Address__c, Name, Integration__c
+					FROM Partner__c
+					WHERE id = :oppNew.Partner__c
+				];
+				OpportunityCallout.postInfo(par.Address__c, par.Name, oppNew.Name, oppNew.Amount, oppNew.Type);
+				par.Integration__c = true;
+				update par;
+			} else if (oppOld.StageName == Constants.OPP_STAGE_QUOTE_SENT) {
 				if (oppNew.StageName != Constants.OPP_STAGE_NEW && oppNew.StageName != Constants.OPP_STAGE_CLOSED_WON) {
 					Work_Breakdown_Structure__c wbs = [
 						SELECT IsSynced__c, Status__c
