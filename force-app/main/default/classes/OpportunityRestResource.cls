@@ -1,4 +1,4 @@
-@RestResource(urlMapping='/services/apexrest/CompanyData/Opportunity/*')
+@RestResource(urlMapping='/CompanyData/Opportunity/*')
 global with sharing class OpportunityRestResource {
 	@HttpPost
 	global static id upsertOpportunityAndPartner(

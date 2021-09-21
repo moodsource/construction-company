@@ -22,7 +22,9 @@ private class EmailUtilityTest {
 	@isTest
 	static void testToSendEmailWithTemplateContactTrue() {
 		Test.startTest();
-		EmailUtility.toSendEmailWithTemplate('TestEmail', Contact.SObjectType);
+		List<Messaging.SingleEmailMessage> mailList = new List<Messaging.SingleEmailMessage>();
+		mailList.add(EmailUtility.putEmailInfoOnTemplate('TestEmail', Contact.SObjectType));
+		EmailUtility.sendEmail(mailList);
 		Integer invocations = Limits.getEmailInvocations();
 		Test.stopTest();
 
@@ -32,7 +34,9 @@ private class EmailUtilityTest {
 	@isTest
 	static void testToSendEmailWithTemplateContactWrongName() {
 		Test.startTest();
-		EmailUtility.toSendEmailWithTemplate('notexistinglastname', Contact.SObjectType);
+		List<Messaging.SingleEmailMessage> mailList = new List<Messaging.SingleEmailMessage>();
+		mailList.add(EmailUtility.putEmailInfoOnTemplate('notexistinglastname', Contact.SObjectType));
+		EmailUtility.sendEmail(mailList);
 		Integer invocations = Limits.getEmailInvocations();
 		Test.stopTest();
 
@@ -42,7 +46,9 @@ private class EmailUtilityTest {
 	@isTest
 	static void testToSendEmailWithTemplateOpportunityWrongEmail() {
 		Test.startTest();
-		EmailUtility.toSendEmailWithTemplate('conWithoutEmail', Contact.SObjectType);
+		List<Messaging.SingleEmailMessage> mailList = new List<Messaging.SingleEmailMessage>();
+		mailList.add(EmailUtility.putEmailInfoOnTemplate('conWithoutEmail', Contact.SObjectType));
+		EmailUtility.sendEmail(mailList);
 		Integer invocations = Limits.getEmailInvocations();
 		Test.stopTest();
 
@@ -52,7 +58,9 @@ private class EmailUtilityTest {
 	@isTest
 	static void testToSendEmailWithTemplateOpportunityFalse() {
 		Test.startTest();
-		EmailUtility.toSendEmailWithTemplate('NewOpportunity', User.SObjectType);
+		List<Messaging.SingleEmailMessage> mailList = new List<Messaging.SingleEmailMessage>();
+		mailList.add(EmailUtility.putEmailInfoOnTemplate('NewOpportunity', User.SObjectType));
+		EmailUtility.sendEmail(mailList);
 		Integer invocations = Limits.getEmailInvocations();
 		Test.stopTest();
 

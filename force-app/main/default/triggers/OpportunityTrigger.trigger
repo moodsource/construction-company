@@ -1,6 +1,7 @@
 trigger OpportunityTrigger on Opportunity(after update, before update) {
 	if (Trigger.isAfter) {
 		List<Task> taskList = new List<Task>();
+		List<Messaging.SingleEmailMessage> mailList = new List<Messaging.SingleEmailMessage>();
 		Map<Id, Opportunity> oldMap = Trigger.oldMap;
 		for (Opportunity oppNew : Trigger.New) {
 			Opportunity oppOld = oldMap.get(oppNew.Id);
@@ -16,9 +17,10 @@ trigger OpportunityTrigger on Opportunity(after update, before update) {
 			} else if (oppOld.StageName == Constants.OPP_STAGE_QUOTE_SENT) {
 				if (oppNew.StageName != Constants.OPP_STAGE_NEW && oppNew.StageName != Constants.OPP_STAGE_CLOSED_WON) {
 					Work_Breakdown_Structure__c wbs = [
-						SELECT IsSynced__c, Status__c
+						SELECT IsSynced__c, Status__c, id
 						FROM Work_Breakdown_Structure__c
-						WHERE Opportunity__c = :oppNew.id
+						WHERE Id = :oppNew.Work_Breakdown_Structure__c
+						LIMIT 1
 					];
 					User usr = [SELECT id, LastName FROM User WHERE id = :oppNew.OwnerId];
 					if (wbs.IsSynced__c) {
@@ -26,10 +28,12 @@ trigger OpportunityTrigger on Opportunity(after update, before update) {
 						update wbs;
 					}
 					taskList.add(new Task(Subject = 'Follow Up this Opportunity', WhatId = oppNew.Id));
-					EmailUtility.toSendEmailWithTemplate(usr.LastName, User.SObjectType);
+					mailList.add(EmailUtility.putEmailInfoOnTemplate(usr.LastName, User.SObjectType));
 				}
 			}
 		}
+		EmailUtility.sendEmail(mailList);
+
 		insert taskList;
 	} else if (Trigger.isBefore) {
 		Map<Id, Opportunity> oldMap = Trigger.oldMap;
@@ -37,10 +41,10 @@ trigger OpportunityTrigger on Opportunity(after update, before update) {
 			if (oppNew.StageName == Constants.OPP_STAGE_CLOSED_WON) {
 				Opportunity oppOld = oldMap.get(oppNew.Id);
 				if (
-					oppOld.StageName == Constants.OPP_STAGE_NEGOTIATION ||
-					oppOld.StageName == Constants.OPP_STAGE_QUOTE_SENT
+					oppOld.StageName != Constants.OPP_STAGE_NEGOTIATION &&
+					oppOld.StageName != Constants.OPP_STAGE_QUOTE_SENT
 				) {
-					oppNew.addError('You cannot change Quote Sent and Negotiation status on Closed Won.');
+					oppNew.addError('You can only change Quote Sent and Negotiation status on Closed Won.');
 				}
 			}
 		}

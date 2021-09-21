@@ -70,6 +70,9 @@ private class OpportunityTriggerTest {
 		);
 		insert wbsSynced;
 
+		oppQuoteSent.Work_Breakdown_Structure__c = wbsSynced.id;
+		update oppQuoteSent;
+
 		Product2__c prod = new Product2__c(Name = 'TestProduct', Type__c = 'Work', Price__c = 70);
 		insert prod;
 
@@ -101,23 +104,22 @@ private class OpportunityTriggerTest {
 
 	@isTest
 	static void testOppStageChangeTrue() {
-		Opportunity opp = [SELECT StageName FROM Opportunity WHERE Name = 'OpportunityNew'];
+		Opportunity opp = [SELECT StageName FROM Opportunity WHERE Name = 'OpportunityQuoteSent'];
 		opp.StageName = Constants.OPP_STAGE_CLOSED_WON;
-		update opp;
 
 		System.assertEquals(true, Database.update(opp).isSuccess());
 	}
 
 	@isTest
 	static void testOppStageChangeFalse() {
-		Opportunity opp = [SELECT StageName FROM Opportunity WHERE Name = 'OpportunityQuoteSent'];
+		Opportunity opp = [SELECT StageName FROM Opportunity WHERE Name = 'OpportunityNew'];
 		try {
 			opp.StageName = Constants.OPP_STAGE_CLOSED_WON;
 			update opp;
 			throw new IvalidStageException('An exception should have been thrown by the trigger but was not.');
 		} catch (Exception e) {
 			Boolean expectedExceptionThrown = e.getMessage()
-				.contains('You cannot change Quote Sent and Negotiation status on Closed Won.');
+				.contains('You can only change Quote Sent and Negotiation status on Closed Won.');
 
 			System.assertEquals(true, expectedExceptionThrown);
 		}
