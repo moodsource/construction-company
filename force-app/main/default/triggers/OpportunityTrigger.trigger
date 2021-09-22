@@ -3,26 +3,24 @@ trigger OpportunityTrigger on Opportunity(after update, before update) {
 		List<Task> taskList = new List<Task>();
 		List<Messaging.SingleEmailMessage> mailList = new List<Messaging.SingleEmailMessage>();
 		Map<Id, Opportunity> oldMap = Trigger.oldMap;
+		Map<Id, Partner__c> parMap = new Map<Id, Partner__c>(
+			[SELECT Address__c, Name, Integration__c, id FROM Partner__c]
+		);
+		Map<Id, Work_Breakdown_Structure__c> wbsMap = new Map<Id, Work_Breakdown_Structure__c>(
+			[SELECT IsSynced__c, Status__c, id FROM Work_Breakdown_Structure__c]
+		);
+		Map<Id, User> userMap = new Map<Id, User>([SELECT id, LastName FROM User]);
 		for (Opportunity oppNew : Trigger.New) {
 			Opportunity oppOld = oldMap.get(oppNew.Id);
 			if (oppNew.StageName == 'Shared' && oppNew.Partner__c != null) {
-				Partner__c par = [
-					SELECT Address__c, Name, Integration__c
-					FROM Partner__c
-					WHERE id = :oppNew.Partner__c
-				];
+				Partner__c par = parMap.get(oppNew.Partner__c);
 				OpportunityCallout.postInfo(par.Address__c, par.Name, oppNew.Name, oppNew.Amount, oppNew.Type);
 				par.Integration__c = true;
 				update par;
 			} else if (oppOld.StageName == Constants.OPP_STAGE_QUOTE_SENT) {
 				if (oppNew.StageName != Constants.OPP_STAGE_NEW && oppNew.StageName != Constants.OPP_STAGE_CLOSED_WON) {
-					Work_Breakdown_Structure__c wbs = [
-						SELECT IsSynced__c, Status__c, id
-						FROM Work_Breakdown_Structure__c
-						WHERE Id = :oppNew.Work_Breakdown_Structure__c
-						LIMIT 1
-					];
-					User usr = [SELECT id, LastName FROM User WHERE id = :oppNew.OwnerId];
+					Work_Breakdown_Structure__c wbs = wbsMap.get(oppNew.Work_Breakdown_Structure__c);
+					User usr = userMap.get(oppNew.OwnerId);
 					if (wbs.IsSynced__c) {
 						wbs.Status__c = Constants.WBS_STATUS_REJECTED;
 						update wbs;
