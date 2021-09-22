@@ -7,8 +7,14 @@ trigger WorkBreakdownTrigger on Work_Breakdown_Structure__c(before update, after
 		}
 	} else if (Trigger.isAfter) {
 		List<Messaging.SingleEmailMessage> mailList = new List<Messaging.SingleEmailMessage>();
+		Set<Id> oppIds = new Set<Id>();
+		for (Work_Breakdown_Structure__c wbs : Trigger.New) {
+			if (wbs.Status__c == Constants.WBS_STATUS_SENT && wbs.Opportunity__c != null) {
+				oppIds.add(wbs.Opportunity__c);
+			}
+		}
 		Map<Id, Opportunity> oppMap = new Map<Id, Opportunity>(
-			[SELECT Amount, Decision_Maker__r.LastName, id FROM Opportunity]
+			[SELECT Amount, Decision_Maker__r.LastName, id FROM Opportunity WHERE id IN :oppIds]
 		);
 		for (Work_Breakdown_Structure__c wbs : Trigger.New) {
 			if (wbs.Status__c == Constants.WBS_STATUS_SENT && wbs.Opportunity__c != null) {

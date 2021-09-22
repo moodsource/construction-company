@@ -2,14 +2,25 @@ trigger OpportunityTrigger on Opportunity(after update, before update) {
 	if (Trigger.isAfter) {
 		List<Task> taskList = new List<Task>();
 		List<Messaging.SingleEmailMessage> mailList = new List<Messaging.SingleEmailMessage>();
+
+		Set<Id> parIds = new Set<Id>();
+		Set<Id> wbsIds = new Set<Id>();
+		Set<Id> userIds = new Set<Id>();
+		for (Opportunity oppNew : Trigger.New) {
+			parIds.add(oppNew.Partner__c);
+			wbsIds.add(oppNew.Work_Breakdown_Structure__c);
+			userIds.add(oppNew.OwnerId);
+		}
+
 		Map<Id, Opportunity> oldMap = Trigger.oldMap;
 		Map<Id, Partner__c> parMap = new Map<Id, Partner__c>(
-			[SELECT Address__c, Name, Integration__c, id FROM Partner__c]
+			[SELECT Address__c, Name, Integration__c, id FROM Partner__c WHERE id IN :parIds]
 		);
 		Map<Id, Work_Breakdown_Structure__c> wbsMap = new Map<Id, Work_Breakdown_Structure__c>(
-			[SELECT IsSynced__c, Status__c, id FROM Work_Breakdown_Structure__c]
+			[SELECT IsSynced__c, Status__c, id FROM Work_Breakdown_Structure__c WHERE id IN :wbsIds]
 		);
-		Map<Id, User> userMap = new Map<Id, User>([SELECT id, LastName FROM User]);
+		Map<Id, User> userMap = new Map<Id, User>([SELECT id, LastName FROM User WHERE id IN :userIds]);
+
 		for (Opportunity oppNew : Trigger.New) {
 			Opportunity oppOld = oldMap.get(oppNew.Id);
 			if (oppNew.StageName == 'Shared' && oppNew.Partner__c != null) {
