@@ -1,43 +1,24 @@
-public class WorkBreakdownStructureTriggerHandler implements ITriggerHandler {
-	private static Boolean triggerDisabled = false;
-
-	public void disableTrigger() {
-		triggerDisabled = true;
-	}
-	public void enableTrigger() {
-		triggerDisabled = false;
+public class WorkBreakdownStructureTriggerHandler extends AbstractTriggerHandler {
+	public override void beforeUpdate(Map<Id, SObject> newItemsMap, Map<Id, SObject> oldItemsMap) {
+		markSyncedWbs(newItemsMap, oldItemsMap);
 	}
 
-	public Boolean isTriggerEnabled() {
-		if (triggerDisabled) {
-			return false;
-		} else {
-			return true;
-		}
+	public override void afterUpdate(Map<Id, SObject> newItemsMap, Map<Id, SObject> oldItemsMap) {
+		syncWbsAndOpportunity(newItemsMap, oldItemsMap);
 	}
 
-	public void beforeUpdate(
-		Map<Id, SObject> newItemsMap,
-		Map<Id, SObject> oldItemsMap,
-		List<SObject> newItems,
-		List<SObject> oldItems
-	) {
-		for (Work_Breakdown_Structure__c wbs : (List<Work_Breakdown_Structure__c>) newItems) {
+	private void markSyncedWbs(Map<Id, SObject> newItemsMap, Map<Id, SObject> oldItemsMap) {
+		for (Work_Breakdown_Structure__c wbs : (List<Work_Breakdown_Structure__c>) newItemsMap.values()) {
 			if (wbs.Status__c == Constants.WBS_STATUS_SENT && wbs.Opportunity__c != null) {
 				wbs.IsSynced__c = true;
 			}
 		}
 	}
 
-	public void afterUpdate(
-		Map<Id, SObject> newItemsMap,
-		Map<Id, SObject> oldItemsMap,
-		List<SObject> newItems,
-		List<SObject> oldItems
-	) {
+	private void syncWbsAndOpportunity(Map<Id, SObject> newItemsMap, Map<Id, SObject> oldItemsMap) {
 		List<Messaging.SingleEmailMessage> mailList = new List<Messaging.SingleEmailMessage>();
 		Set<Id> oppIds = new Set<Id>();
-		for (Work_Breakdown_Structure__c wbs : (List<Work_Breakdown_Structure__c>) newItems) {
+		for (Work_Breakdown_Structure__c wbs : (List<Work_Breakdown_Structure__c>) newItemsMap.values()) {
 			if (wbs.Status__c == Constants.WBS_STATUS_SENT && wbs.Opportunity__c != null) {
 				oppIds.add(wbs.Opportunity__c);
 			}
@@ -45,7 +26,7 @@ public class WorkBreakdownStructureTriggerHandler implements ITriggerHandler {
 		Map<Id, Opportunity> oppMap = new Map<Id, Opportunity>(
 			[SELECT Amount, Decision_Maker__r.LastName, id FROM Opportunity WHERE id IN :oppIds]
 		);
-		for (Work_Breakdown_Structure__c wbs : (List<Work_Breakdown_Structure__c>) newItems) {
+		for (Work_Breakdown_Structure__c wbs : (List<Work_Breakdown_Structure__c>) newItemsMap.values()) {
 			if (wbs.Status__c == Constants.WBS_STATUS_SENT && wbs.Opportunity__c != null) {
 				Opportunity opp = oppMap.get(wbs.Opportunity__c);
 				opp.Amount = wbs.Total_Amount__c;
@@ -55,20 +36,5 @@ public class WorkBreakdownStructureTriggerHandler implements ITriggerHandler {
 			}
 		}
 		EmailUtility.sendEmail(mailList);
-	}
-
-	public void beforeInsert(List<SObject> newItems) {
-	}
-
-	public void beforeDelete(Map<Id, SObject> oldItemsMap) {
-	}
-
-	public void afterDelete(Map<Id, SObject> oldItemsMap) {
-	}
-
-	public void afterUndelete(Map<Id, SObject> oldItemsMap) {
-	}
-
-	public void afterInsert(Map<Id, SObject> newItemsMap) {
 	}
 }
