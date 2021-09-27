@@ -1,12 +1,29 @@
 public class TriggerFactory {
 	public class TriggerException extends Exception {
 	}
+
+	private static Map<SObjectType, Boolean> disabledTriggers = new Map<SObjectType, Boolean>();
+
+	public static void disableTrigger(SObjectType type) {
+		disabledTriggers.put(type, true);
+	}
+	public static void enableTrigger(SObjectType type) {
+		disabledTriggers.put(type, false);
+	}
+
+	public static Boolean isTriggerDisabled(SObjectType type) {
+		if (!disabledTriggers.containsKey(type)) {
+			return false;
+		}
+		return disabledTriggers.get(type);
+	}
+
 	public static void execute(SObjectType sobjectType) {
 		AbstractTriggerHandler handler = createHandler(sobjectType);
-		handler.enableTrigger();
-		if (!handler.isTriggerEnabled()) {
+		if (isTriggerDisabled(sobjectType)) {
 			return;
 		}
+
 		handleOperation(handler);
 	}
 
